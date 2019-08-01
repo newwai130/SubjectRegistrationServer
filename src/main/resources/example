@@ -1,0 +1,28 @@
+{
+  "update_id": 105627515,
+  "message": {
+    "message_id": 948,
+    "from": {
+      "id": 340550496,
+      "is_bot": false,
+      "first_name": "k",
+      "username": "kaka4455",
+      "language_code": "zh-hans"
+    },
+    "chat": {
+      "id": 340550496,
+      "first_name": "k",
+      "username": "kaka4455",
+      "type": "private"
+    },
+    "date": 1564638073,
+    "text": "/start",
+    "entities": [
+      {
+        "offset": 0,
+        "length": 6,
+        "type": "bot_command"
+      }
+    ]
+  }
+}
