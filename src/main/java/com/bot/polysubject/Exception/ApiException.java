@@ -1,4 +1,4 @@
-package com.bot.polysubject.Exception;
+package com.bot.polysubject.exception;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

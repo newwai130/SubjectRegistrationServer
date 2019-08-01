@@ -1,7 +1,7 @@
 package com.bot.polysubject.Service;
 
-import com.bot.polysubject.Exception.ApiException;
-import com.bot.polysubject.Exception.ApiExceptionType;
+import com.bot.polysubject.exception.ApiException;
+import com.bot.polysubject.exception.ApiExceptionType;
 import com.bot.polysubject.entity.User;
 import com.bot.polysubject.model.dto.UserDTO;
 import com.bot.polysubject.repository.UserRepository;
@@ -13,7 +13,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
-public class BotService {
+public class UserService {
 
     @Autowired
     UserRepository userRepository;
@@ -26,14 +26,21 @@ public class BotService {
                 .collect(Collectors.toList());
     };
 
-    @Transactional(rollbackOn=Exception.class)
-    public UserDTO activateUser(Long userId){
+    public UserDTO createUser(Long telegramId){
+        return new UserDTO(
+                    userRepository.save(new User(telegramId))
+                );
 
-        User user = userRepository.findOneById(userId);
+    };
+
+    @Transactional(rollbackOn=Exception.class)
+    public UserDTO activateUser(Long telegramId){
+
+        User user = userRepository.findOneById(telegramId);
 
         if(user == null) {
-            user = new User(userId, "Normal User", 5, "active");
-        }else{
+            this.createUser(telegramId);
+        }else {
             user.setStatus("active");
         }
 
@@ -48,7 +55,7 @@ public class BotService {
         User user = userRepository.findOneById(userId);
 
         if(user == null) {
-            throw new ApiException(ApiExceptionType.RecordNotFound);
+            throw new ApiException(ApiExceptionType.UserNotFound);
         }else{
             user.setStatus("inactive");
         }

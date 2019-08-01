@@ -30,20 +30,15 @@ public class TelegramBotService {
         String command = parts[0];
         String parameters = parts[1];
 
-
-
         switch(command) {
             case "\\start":
                 break;
             case "\\stop":
                 break;
-            case "\\adds":
+            case "\\add":
                 break;
             case "\\delete":
                 break;
-
-
         }
-
     }
 }

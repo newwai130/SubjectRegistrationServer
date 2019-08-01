@@ -1,6 +1,6 @@
 package com.bot.polysubject.controller;
 
-import com.bot.polysubject.Service.BotService;
+import com.bot.polysubject.Service.UserService;
 import com.bot.polysubject.entity.User;
 import com.bot.polysubject.model.api.resq.UserResq;
 import com.bot.polysubject.model.dto.UserDTO;
@@ -17,7 +17,7 @@ import java.util.List;
 public class SubjectRegistrationController {
 
     @Autowired
-    BotService botService;
+    UserService botService;
 
     @RequestMapping(value = "/", method = RequestMethod.GET)
     public String index() {

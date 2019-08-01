@@ -2,6 +2,7 @@ package com.bot.polysubject.entity;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import org.apache.commons.lang3.StringUtils;
 
 import javax.persistence.*;
 
@@ -16,9 +17,8 @@ public class SubjectToBeNotified {
     @Column(name = "id")
     private Long id;
 
-    @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name="user_userId")
-    private User user;
+    @JoinColumn(name="userId")
+    private Long userId;
 
     @Column(name = "subject_code")
     private String subjectCode;
@@ -26,4 +26,9 @@ public class SubjectToBeNotified {
     @Column(name = "component_code")
     private String componentCode;
 
+    public SubjectToBeNotified(Long userId, String subjectCode, String componentCode) {
+        this. userId = userId;
+        this.subjectCode = subjectCode;
+        this.componentCode = componentCode;
+    }
 }

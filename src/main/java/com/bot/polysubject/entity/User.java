@@ -14,6 +14,9 @@ public class User {
     @Column(name = "userId")
     private Long id;
 
+    @Column(name = "telegramId")
+    private Long telegramId;
+
     @Column(name = "role")
     private String role;
 
@@ -22,4 +25,15 @@ public class User {
 
     @Column(name = "status")
     private String status;
+
+    @Column(name = "repeatedMode")
+    private String repeatedMode;
+
+    public User(Long telegramId) {
+        this.telegramId = telegramId;
+        this.role = "normal user";
+        this.rank = 5;
+        this.status = "active";
+        this.repeatedMode = "once";
+    }
 }

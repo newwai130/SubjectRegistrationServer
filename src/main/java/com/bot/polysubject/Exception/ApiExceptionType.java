@@ -1,8 +1,8 @@
-package com.bot.polysubject.Exception;
+package com.bot.polysubject.exception;
 
 public enum ApiExceptionType {
 
-    RecordNotFound(10, "Record Not Found");
+    UserNotFound(10, "User Not Found");
 
     private Integer code;
     private  String message;
