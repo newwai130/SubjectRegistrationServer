@@ -33,11 +33,15 @@ public class TelegramBotController {
     public String botRequest2(HttpServletRequest request) throws Exception {
         String body = IOUtils.toString(request.getInputStream());
         JsonObject jsonObject = new JsonParser().parse(body).getAsJsonObject();
-        Long chatId = jsonObject.get("message").getAsJsonObject().get("chat").getAsJsonObject().get("id").getAsLong();
+
+        long telegramId = jsonObject.get("message").getAsJsonObject().get("from").getAsJsonObject().get("id").getAsLong();
+        long chatId = jsonObject.get("message").getAsJsonObject().get("chat").getAsJsonObject().get("id").getAsLong();
         String text = jsonObject.get("message").getAsJsonObject().get("text").getAsString();
-        logger.info(chatId);
-        logger.info(text);
-        return "Greetings from Spring Boot! Get";
+
+        logger.info("chatId: " + chatId);
+        logger.info("text: " + text);
+        telegramBotService.dispatcher(telegramId, chatId, text);
+        return "Nice to meet you";
     }
 
 }
