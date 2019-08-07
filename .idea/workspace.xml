@@ -57,11 +57,14 @@
   <component name="ProjectId" id="1OmGlLvacC9AgZ1E2s5TuWNsA8Q" />
   <component name="PropertiesComponent">
     <property name="SHARE_PROJECT_CONFIGURATION_FILES" value="true" />
+    <property name="create.test.in.the.same.root" value="true" />
+    <property name="settings.editor.selected.configurable" value="preferences.externalTools" />
   </component>
   <component name="RecentsManager">
     <key name="CopyClassDialog.RECENTS_KEY">
-      <recent name="com.bot.polysubject.model.dto" />
+      <recent name="com.bot.polysubject.entity" />
       <recent name="com.bot.polysubject.Service" />
+      <recent name="com.bot.polysubject.model.dto" />
     </key>
   </component>
   <component name="RunDashboard">
@@ -167,5 +170,16 @@
         </entry>
       </map>
     </option>
+  </component>
+  <component name="XDebuggerManager">
+    <breakpoint-manager>
+      <breakpoints>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/src/main/java/com/bot/polysubject/entity/subject/Component.java</url>
+          <line>9</line>
+          <option name="timeStamp" value="1" />
+        </line-breakpoint>
+      </breakpoints>
+    </breakpoint-manager>
   </component>
 </project>

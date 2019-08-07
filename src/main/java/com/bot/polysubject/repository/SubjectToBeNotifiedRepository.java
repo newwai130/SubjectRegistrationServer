@@ -9,6 +9,8 @@ public interface SubjectToBeNotifiedRepository extends JpaRepository<SubjectToBe
 
     public List<SubjectToBeNotified> findAllById(Long id);
 
+    public List<SubjectToBeNotified> findAllByUserId(Long userId);
+
     public SubjectToBeNotified findByUserIdAndSubjectCodeAndComponentCode(Long userId, String subjectCode, String componentCode);
 
     public void delete(SubjectToBeNotified subjectToBeNotified);

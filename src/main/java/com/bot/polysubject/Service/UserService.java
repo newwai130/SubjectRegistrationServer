@@ -9,7 +9,6 @@ import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 public class UserService {
@@ -48,7 +47,7 @@ public class UserService {
     }
 
     @Transactional(rollbackOn=Exception.class)
-    public User deactivateUser(long telegramId) throws Exception{
+    public User deactivateUser(long telegramId) {
 
         User user = userRepository.findOneByTelegramId(telegramId);
 
