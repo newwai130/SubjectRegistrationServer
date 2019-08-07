@@ -12,5 +12,6 @@ import java.util.List;
 @NoArgsConstructor
 public class Subject {
     private String code;
+    private String name;
     private List<Component> components;
 }

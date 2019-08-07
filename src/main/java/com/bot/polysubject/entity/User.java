@@ -11,7 +11,8 @@ import lombok.*;
 public class User {
 
     @Id
-    @Column(name = "userId")
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    @Column(name = "id")
     private Long id;
 
     @Column(name = "telegramId")

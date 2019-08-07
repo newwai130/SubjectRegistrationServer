@@ -51,23 +51,23 @@ public class TelegramBotService {
         logger.info("parameters: " + String.join(", ",parameters));
 
         switch(command) {
-            case "\\start":
+            case "/start":
                 startCommandHandler(telegramId, chatId, parameters);
                 break;
-            case "\\stop":
+            case "/stop":
                 stopCommandHandler(telegramId, chatId, parameters);
                 break;
-            case "\\add":
+            case "/add":
                 addCommandHandler(telegramId, chatId, parameters);
                 break;
-            case "\\delete":
+            case "/delete":
                 deleteCommandHandler(telegramId, chatId, parameters);
                 break;
-            case "\\list":
+            case "/list":
                 listCommandHandler(telegramId, chatId, parameters);
                 break;
-            case "\\test":
-                testCommandHandler(telegramId, chatId, parameters);
+            case "/test":
+                testCommandHandler(telegramId, chatId, parameters); //get all subject
                 break;
         }
     }
@@ -92,7 +92,7 @@ public class TelegramBotService {
         User user = userService.findUserByTelegramId(telegramId);
 
         if(parameters.length != 2) {
-            this.sendMessage(chatId, "The command should be \\add <subjectCode> <componentCode>");
+            this.sendMessage(chatId, "The command should be /add <subjectCode> <componentCode>");
             return;
         }
 
@@ -114,7 +114,7 @@ public class TelegramBotService {
         User user = userService.findUserByTelegramId(telegramId);
 
         if(parameters.length != 2) {
-            this.sendMessage(chatId, "The command should be \\delete <subjectCode> <componentCode>");
+            this.sendMessage(chatId, "The command should be delete <subjectCode> <componentCode>");
             return;
         }
 
@@ -131,7 +131,7 @@ public class TelegramBotService {
     }
 
     private void testCommandHandler(long telegramId, long chatId, String[] parameters) {
-
+        logger.info("in test handler");
         createUserIfNotExist(telegramId);
         String message = subjectsService.getAllSubject()
                             .stream()
