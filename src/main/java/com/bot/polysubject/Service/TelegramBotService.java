@@ -2,6 +2,9 @@ package com.bot.polysubject.Service;
 
 import com.bot.polysubject.entity.SubjectToBeNotified;
 import com.bot.polysubject.entity.User;
+import com.bot.polysubject.entity.subject.Component;
+import com.bot.polysubject.entity.subject.Subject;
+import com.bot.polysubject.entity.subject.Subjects;
 import com.bot.polysubject.exception.ApiException;
 import com.bot.polysubject.exception.ApiExceptionType;
 import com.pengrad.telegrambot.TelegramBot;
@@ -66,27 +69,27 @@ public class TelegramBotService {
             case "/list":
                 listCommandHandler(telegramId, chatId, parameters);
                 break;
-            case "/test":
-                testCommandHandler(telegramId, chatId, parameters); //get all subject
+            case "/showSubjects":
+                showSubjectsCommandHandler(telegramId, chatId, parameters); //get all subject
                 break;
         }
     }
 
-    private void startCommandHandler(long telegramId, long chatId, String[] parameters) {
+    public void startCommandHandler(long telegramId, long chatId, String[] parameters) {
         createUserIfNotExist(telegramId);
         User user = userService.findUserByTelegramId(telegramId);
         user = userService.activateUser(telegramId);
         showUserInfo(telegramId, chatId, parameters);
     }
 
-    private void stopCommandHandler(long telegramId, long chatId, String[] parameters) {
+    public void stopCommandHandler(long telegramId, long chatId, String[] parameters) {
         createUserIfNotExist(telegramId);
         User user = userService.findUserByTelegramId(telegramId);
         user = userService.deactivateUser(telegramId);
         showUserInfo(telegramId, chatId, parameters);
     }
 
-    private void addCommandHandler(long telegramId, long chatId, String[] parameters) {
+    public void addCommandHandler(long telegramId, long chatId, String[] parameters) {
 
         createUserIfNotExist(telegramId);
         User user = userService.findUserByTelegramId(telegramId);
@@ -104,11 +107,19 @@ public class TelegramBotService {
             return;
         }
 
-        subjectToBeNotifiedService.addSubjectNotification(user.getId(), subjectCode, componentCode);
+        if(subjectToBeNotifiedService.countUserAddedSubjectNotification(user.getId()) > 5 ) {
+            this.sendMessage(chatId, "Maximum number of component that can be added is 5");
+            return;
+        }
 
+        if(subjectToBeNotifiedService.findSubjectNotification(user.getId(), subjectCode, componentCode) == null) {
+            subjectToBeNotifiedService.addSubjectNotification(user.getId(), subjectCode, componentCode);
+        }
+
+        showUserInfo(telegramId, chatId, parameters);
     }
 
-    private void deleteCommandHandler(long telegramId, long chatId, String[] parameters) {
+    public void deleteCommandHandler(long telegramId, long chatId, String[] parameters) {
 
         createUserIfNotExist(telegramId);
         User user = userService.findUserByTelegramId(telegramId);
@@ -122,15 +133,17 @@ public class TelegramBotService {
         String componentCode = parameters[1];
 
         subjectToBeNotifiedService.deleteSubjectNotification(user.getId(), subjectCode, componentCode);
+
+        showUserInfo(telegramId, chatId, parameters);
     }
 
-    private void listCommandHandler(long telegramId, long chatId, String[] parameters) {
+    public void listCommandHandler(long telegramId, long chatId, String[] parameters) {
 
         createUserIfNotExist(telegramId);
         showUserInfo(telegramId, chatId, parameters);
     }
 
-    private void testCommandHandler(long telegramId, long chatId, String[] parameters) {
+    public void showSubjectsCommandHandler(long telegramId, long chatId, String[] parameters) {
         logger.info("in test handler");
         createUserIfNotExist(telegramId);
         String message = subjectsService.getAllSubject()
@@ -143,13 +156,13 @@ public class TelegramBotService {
         this.sendMessage(chatId, message);
     }
 
-    private void createUserIfNotExist(long telegramId) {
+    public void createUserIfNotExist(long telegramId) {
         if (userService.findUserByTelegramId(telegramId) == null) {
             userService.createUser(telegramId);
         }
     }
 
-    private void showUserInfo(long telegramId, long chatId, String[] parameters ) {
+    public void showUserInfo(long telegramId, long chatId, String[] parameters ) {
         User user = userService.findUserByTelegramId(telegramId);
 
         if(user==null) {
@@ -158,12 +171,28 @@ public class TelegramBotService {
 
         List<SubjectToBeNotified> subjectToBeNotifiedList = subjectToBeNotifiedService.getAllSubjects(user.getId());
 
-        this.sendMessage(chatId, "telegramId: " + telegramId + "\n" +
+        this.sendMessage(chatId,
+                "telegramId: " + telegramId + "\n" +
                 "chatId: " + chatId + "\n" +
-                "status: " + user.getStatus() +
+                "status: " + user.getStatus() + "\n" +
                 "subjects: " +  subjectToBeNotifiedList.stream()
                                     .map(x->x.getSubjectCode() + " - " + x.getComponentCode())
-                                    .collect(Collectors.joining("\n"))
+                                    .collect(Collectors.joining("\n")) + "\n"
                 );
+    }
+
+    public void updateVacancy(Subjects subjects){
+
+        List<>
+
+        for(Subject subject: subjects.getSubjects()) {
+            for(Component component: subject.getComponents()) {
+                if(component.getVacancy() > 0) {
+                    List<SubjectToBeNotified> subjectToBeNotifiedLists = subjectToBeNotifiedService.findSubjectNotificationBySubjectCodeAndComponentCode(subject.getCode(), component.getCode());
+                    subjectToBeNotifiedLists.stream()
+                            .map(x->)
+                }
+            }
+        }
     }
 }

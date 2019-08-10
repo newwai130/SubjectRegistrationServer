@@ -2,6 +2,7 @@ package com.bot.polysubject.entity;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
 
 import javax.persistence.*;
@@ -9,6 +10,7 @@ import javax.persistence.*;
 @Entity
 @Data
 @AllArgsConstructor
+@NoArgsConstructor
 @Table(name = "SubjectToBeNotified")
 public class SubjectToBeNotified {
 

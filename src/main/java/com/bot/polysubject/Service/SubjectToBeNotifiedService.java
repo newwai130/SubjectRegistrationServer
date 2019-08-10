@@ -18,6 +18,18 @@ public class SubjectToBeNotifiedService {
         return subjectToBeNotifiedRepository.findAllById(userId);
     };
 
+    public SubjectToBeNotified findSubjectNotification(Long userId, String subjectCode, String componentCode){
+        return subjectToBeNotifiedRepository.findFirstByUserIdAndSubjectCodeAndComponentCode(userId, subjectCode, componentCode);
+    };
+
+    public List<SubjectToBeNotified> findSubjectNotificationBySubjectCodeAndComponentCode (String subjectCode, String componentCode){
+        return subjectToBeNotifiedRepository.findBySubjectCodeAndComponentCode(subjectCode, componentCode);
+    };
+
+    public Integer countUserAddedSubjectNotification(Long userId){
+        return subjectToBeNotifiedRepository.countByUserId(userId);
+    }
+
     @Transactional(rollbackOn=Exception.class)
     public SubjectToBeNotified addSubjectNotification(Long userId, String subjectCode, String componentCode){
         return subjectToBeNotifiedRepository.save(new SubjectToBeNotified(userId, subjectCode, componentCode));
@@ -25,7 +37,7 @@ public class SubjectToBeNotifiedService {
 
     @Transactional(rollbackOn=Exception.class)
     public void deleteSubjectNotification(long userId, String subjectCode, String componentCode){
-        SubjectToBeNotified subjectToBeNotified = subjectToBeNotifiedRepository.findByUserIdAndSubjectCodeAndComponentCode(userId, subjectCode, componentCode);
+        SubjectToBeNotified subjectToBeNotified = subjectToBeNotifiedRepository.findFirstByUserIdAndSubjectCodeAndComponentCode(userId, subjectCode, componentCode);
         if(subjectToBeNotified != null) {
             subjectToBeNotifiedRepository.delete(subjectToBeNotified);
         }
