@@ -5,6 +5,7 @@ import com.bot.polysubject.entity.User;
 import com.bot.polysubject.entity.subject.Component;
 import com.bot.polysubject.entity.subject.Subject;
 import com.bot.polysubject.entity.subject.Subjects;
+import com.bot.polysubject.entity.telagramNotification.NotificationMessage;
 import com.bot.polysubject.exception.ApiException;
 import com.bot.polysubject.exception.ApiExceptionType;
 import com.pengrad.telegrambot.TelegramBot;
@@ -16,6 +17,7 @@ import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -48,10 +50,15 @@ public class TelegramBotService {
 
         String parts[] = inputText.split(" ", 2);
         String command = parts[0];
-        String[] parameters = parts[1].split(" ");
+
+        String[] parameters = null;
+        if(parts.length > 1) {
+            parameters = parts[1].split(" ");
+            logger.info("parameters: " + String.join(", ",parameters));
+        }
 
         logger.info("command: " + command);
-        logger.info("parameters: " + String.join(", ",parameters));
+
 
         switch(command) {
             case "/start":
@@ -72,18 +79,21 @@ public class TelegramBotService {
             case "/showSubjects":
                 showSubjectsCommandHandler(telegramId, chatId, parameters); //get all subject
                 break;
+            case "/commands":
+                showCommandsCommandHandler(telegramId, chatId, parameters);
+                break;
         }
     }
 
     public void startCommandHandler(long telegramId, long chatId, String[] parameters) {
-        createUserIfNotExist(telegramId);
+        createUserIfNotExist(telegramId, chatId);
         User user = userService.findUserByTelegramId(telegramId);
         user = userService.activateUser(telegramId);
         showUserInfo(telegramId, chatId, parameters);
     }
 
     public void stopCommandHandler(long telegramId, long chatId, String[] parameters) {
-        createUserIfNotExist(telegramId);
+        createUserIfNotExist(telegramId, chatId);
         User user = userService.findUserByTelegramId(telegramId);
         user = userService.deactivateUser(telegramId);
         showUserInfo(telegramId, chatId, parameters);
@@ -91,10 +101,10 @@ public class TelegramBotService {
 
     public void addCommandHandler(long telegramId, long chatId, String[] parameters) {
 
-        createUserIfNotExist(telegramId);
+        createUserIfNotExist(telegramId, chatId);
         User user = userService.findUserByTelegramId(telegramId);
 
-        if(parameters.length != 2) {
+        if(parameters==null || parameters.length != 2) {
             this.sendMessage(chatId, "The command should be /add <subjectCode> <componentCode>");
             return;
         }
@@ -107,8 +117,9 @@ public class TelegramBotService {
             return;
         }
 
+        logger.info("total: " + subjectToBeNotifiedService.countUserAddedSubjectNotification(user.getId()));
         if(subjectToBeNotifiedService.countUserAddedSubjectNotification(user.getId()) > 5 ) {
-            this.sendMessage(chatId, "Maximum number of component that can be added is 5");
+            this.sendMessage(chatId, "Maximum number of subject that can be added is 5");
             return;
         }
 
@@ -121,10 +132,10 @@ public class TelegramBotService {
 
     public void deleteCommandHandler(long telegramId, long chatId, String[] parameters) {
 
-        createUserIfNotExist(telegramId);
+        createUserIfNotExist(telegramId, chatId);
         User user = userService.findUserByTelegramId(telegramId);
 
-        if(parameters.length != 2) {
+        if(parameters==null || parameters.length != 2) {
             this.sendMessage(chatId, "The command should be delete <subjectCode> <componentCode>");
             return;
         }
@@ -139,13 +150,13 @@ public class TelegramBotService {
 
     public void listCommandHandler(long telegramId, long chatId, String[] parameters) {
 
-        createUserIfNotExist(telegramId);
+        createUserIfNotExist(telegramId, chatId);
         showUserInfo(telegramId, chatId, parameters);
     }
 
     public void showSubjectsCommandHandler(long telegramId, long chatId, String[] parameters) {
-        logger.info("in test handler");
-        createUserIfNotExist(telegramId);
+
+        createUserIfNotExist(telegramId, chatId);
         String message = subjectsService.getAllSubject()
                             .stream()
                             .map(x->x.getCode() + " - " + x.getComponents()
@@ -156,9 +167,22 @@ public class TelegramBotService {
         this.sendMessage(chatId, message);
     }
 
-    public void createUserIfNotExist(long telegramId) {
+    public void showCommandsCommandHandler(long telegramId, long chatId, String[] parameters) {
+
+        String message = "/start\n" +
+                          "/stop\n" +
+                          "/add <SubjectCode> <ComponentCode>\n" +
+                          "/delete <SubjectCode> <ComponentCode>\n" +
+                          "/list\n" +
+                          "/showSubjects\n" +
+                          "/commands\n";
+
+        this.sendMessage(chatId, message);
+    }
+
+    public void createUserIfNotExist(long telegramId, long chatId) {
         if (userService.findUserByTelegramId(telegramId) == null) {
-            userService.createUser(telegramId);
+            userService.createUser(telegramId, chatId);
         }
     }
 
@@ -169,7 +193,7 @@ public class TelegramBotService {
             throw new ApiException(ApiExceptionType.UserNotFound);
         }
 
-        List<SubjectToBeNotified> subjectToBeNotifiedList = subjectToBeNotifiedService.getAllSubjects(user.getId());
+        List<SubjectToBeNotified> subjectToBeNotifiedList = subjectToBeNotifiedService.getAllSubjectsByUsedId(user.getId());
 
         this.sendMessage(chatId,
                 "telegramId: " + telegramId + "\n" +
@@ -181,17 +205,30 @@ public class TelegramBotService {
                 );
     }
 
-    public void updateVacancy(Subjects subjects){
+    public void updateVacancy(List<Subject> subjects, String time) {
 
-        List<>
+        List<NotificationMessage> notificationMessageList = new ArrayList<>();
 
-        for(Subject subject: subjects.getSubjects()) {
+        for(Subject subject: subjects) {
             for(Component component: subject.getComponents()) {
                 if(component.getVacancy() > 0) {
-                    List<SubjectToBeNotified> subjectToBeNotifiedLists = subjectToBeNotifiedService.findSubjectNotificationBySubjectCodeAndComponentCode(subject.getCode(), component.getCode());
-                    subjectToBeNotifiedLists.stream()
-                            .map(x->)
+                    List<User> userList = userService.findActiveUserThatGoingToBeNotifiedAvailableSubjectComponent(subject.getCode(), component.getCode());
+                    //logger.info("vacancy: " + component.getVacancy() );
+                    //userList.stream().forEach(x->logger.info(x.getId()));
+                    userList.stream()
+                            .forEach(x-> notificationMessageList.add(new NotificationMessage(x.getChatId(), subject.getCode() + " " + component.getCode() + " could be added @ " + time)));
                 }
+            }
+        }
+
+        //logger.info("start notify length: " + notificationMessageList.size() );
+        for(NotificationMessage notificationMessage: notificationMessageList) {
+
+            this.sendMessage(notificationMessage.getChatId(), notificationMessage.getMessage());
+            try {
+                Thread.sleep(40);
+            } catch (Exception e) {
+                //
             }
         }
     }

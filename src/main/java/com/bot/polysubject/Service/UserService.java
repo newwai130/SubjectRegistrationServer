@@ -28,8 +28,8 @@ public class UserService {
         return userRepository.findOneByTelegramId(telegramId);
     };
 
-    public User createUser(Long telegramId){
-        return userRepository.save(new User(telegramId));
+    public User createUser(long telegramId, long chatId){
+        return userRepository.save(new User(telegramId, chatId));
     };
 
     @Transactional(rollbackOn=Exception.class)
@@ -38,8 +38,8 @@ public class UserService {
         User user = userRepository.findOneByTelegramId(telegramId);
 
         if(user == null) {
-            this.createUser(telegramId);
-        }else {
+            throw new ApiException(ApiExceptionType.UserNotFound);
+        }else{
             user.setStatus("active");
         }
 
@@ -59,4 +59,8 @@ public class UserService {
 
         return userRepository.save(user);
     }
+
+    public List<User> findActiveUserThatGoingToBeNotifiedAvailableSubjectComponent (String subjectCode, String componentCode){
+        return userRepository.findActiveUserThatGoingToBeNotifiedAvailableSubjectComponent(subjectCode, componentCode);
+    };
 }

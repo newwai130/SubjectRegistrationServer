@@ -14,8 +14,8 @@ public class SubjectToBeNotifiedService {
     @Autowired
     SubjectToBeNotifiedRepository subjectToBeNotifiedRepository;
 
-    public List<SubjectToBeNotified> getAllSubjects(Long userId){
-        return subjectToBeNotifiedRepository.findAllById(userId);
+    public List<SubjectToBeNotified> getAllSubjectsByUsedId(Long userId){
+        return subjectToBeNotifiedRepository.findAllByUserId(userId);
     };
 
     public SubjectToBeNotified findSubjectNotification(Long userId, String subjectCode, String componentCode){
@@ -26,7 +26,9 @@ public class SubjectToBeNotifiedService {
         return subjectToBeNotifiedRepository.findBySubjectCodeAndComponentCode(subjectCode, componentCode);
     };
 
-    public Integer countUserAddedSubjectNotification(Long userId){
+
+
+    public Long countUserAddedSubjectNotification(Long userId){
         return subjectToBeNotifiedRepository.countByUserId(userId);
     }
 

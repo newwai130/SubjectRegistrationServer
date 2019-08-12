@@ -2,6 +2,7 @@ package com.bot.polysubject.repository;
 
 import com.bot.polysubject.entity.SubjectToBeNotified;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
 
 import java.util.List;
 
@@ -17,6 +18,6 @@ public interface SubjectToBeNotifiedRepository extends JpaRepository<SubjectToBe
 
     public void delete(SubjectToBeNotified subjectToBeNotified);
 
-    public Integer countByUserId(Long userId);
+    public Long countByUserId(Long userId);
 
 }

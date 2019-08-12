@@ -22,10 +22,10 @@ public class SubjectToBeNotified {
     @JoinColumn(name="userId")
     private Long userId;
 
-    @Column(name = "subject_code")
+    @Column(name = "subjectCode")
     private String subjectCode;
 
-    @Column(name = "component_code")
+    @Column(name = "componentCode")
     private String componentCode;
 
     public SubjectToBeNotified(Long userId, String subjectCode, String componentCode) {

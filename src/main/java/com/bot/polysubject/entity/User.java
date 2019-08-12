@@ -21,8 +21,8 @@ public class User {
     @Column(name = "role")
     private String role;
 
-    @Column(name = "rank")
-    private Integer rank;
+    @Column(name = "chatId")
+    private Long chatId;
 
     @Column(name = "status")
     private String status;
@@ -30,10 +30,10 @@ public class User {
     @Column(name = "repeatedMode")
     private String repeatedMode;
 
-    public User(Long telegramId) {
+    public User(long telegramId, long chatId) {
         this.telegramId = telegramId;
         this.role = "normal user";
-        this.rank = 5;
+        this.chatId = chatId;
         this.status = "active";
         this.repeatedMode = "once";
     }

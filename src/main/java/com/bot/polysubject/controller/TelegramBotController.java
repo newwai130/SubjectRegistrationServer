@@ -25,12 +25,11 @@ public class TelegramBotController {
 
     @RequestMapping(value = "/", method = RequestMethod.GET)
     public String test() throws Exception {
-        logger.info(1);
         return "Telegram Bot run normally";
     }
 
     @RequestMapping(value = "/", method = RequestMethod.POST)
-    public String botRequest2(HttpServletRequest request) throws Exception {
+    public String handleBotCommandRequest(HttpServletRequest request) throws Exception {
         String body = IOUtils.toString(request.getInputStream());
         JsonObject jsonObject = new JsonParser().parse(body).getAsJsonObject();
 
@@ -41,7 +40,7 @@ public class TelegramBotController {
         logger.info("chatId: " + chatId);
         logger.info("text: " + text);
         telegramBotService.dispatcher(telegramId, chatId, text);
-        return "Nice to meet you";
+        return "Telegram Bot run normally";
     }
 
 }
