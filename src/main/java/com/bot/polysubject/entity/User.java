@@ -7,7 +7,10 @@ import lombok.*;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-@Table(name = "user")
+@Table(name = "user",
+        indexes = {
+                @Index(name = "telegramId",  columnList="telegramId")
+        })
 public class User {
 
     @Id

@@ -3,7 +3,6 @@ package com.bot.polysubject.entity;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.apache.commons.lang3.StringUtils;
 
 import javax.persistence.*;
 
@@ -11,7 +10,11 @@ import javax.persistence.*;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-@Table(name = "SubjectToBeNotified")
+@Table(name = "SubjectToBeNotified",
+        indexes = {
+                @Index(name = "userId_subjectCode_componentCode",  columnList="userId,subjectCode,componentCode"),
+                @Index(name = "subjectCode_componentCode",  columnList="subjectCode,componentCode")
+        })
 public class SubjectToBeNotified {
 
     @Id

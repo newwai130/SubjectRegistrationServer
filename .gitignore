@@ -1,2 +1,17 @@
 build/*
 .gradle/*
+.idea/*
+.idea/*.xml
+.idea/.*
+.idea/.name
+.idea/vcs.xml
+.idea/uiDesigner.xml
+.idea/misc.xml
+.idea/gradle.xml
+.idea/.name
+.idea/vcs.xml
+.idea/uiDesigner.xml
+.idea/misc.xml
+.idea/gradle.xml
+.idea/.name
+*.xml
